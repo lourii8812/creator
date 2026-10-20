@@ -1,0 +1,18 @@
+{
+  "name": "Everything Engine",
+  "short_name": "Engine",
+  "description": "Build useful mini-apps with visual components, data, and workflows.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0a16",
+  "theme_color": "#0b0a16",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

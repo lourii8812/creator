@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0a18">
+  <meta name="description" content="Everything Engine — build useful mini-apps with visual components, data, and workflows.">
+  <title>Everything Engine</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">E</div>
+        <div><strong>EVERYTHING</strong><span>ENGINE / STUDIO</span></div>
+      </div>
+      <button class="workspace-picker" id="workspaceBtn"><span class="workspace-dot"></span><span><b>My workspace</b><small>Local-first workspace</small></span><span class="chevron">⌄</span></button>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="main-nav">
+        <button class="nav-item active" data-view="studio"><span>▦</span> App Studio</button>
+        <button class="nav-item" data-view="library"><span>▣</span> App Library <em id="appCount">1</em></button>
+        <button class="nav-item" data-view="data"><span>▤</span> Data Studio</button>
+        <button class="nav-item" data-view="automations"><span>⌘</span> Workflows</button>
+        <button class="nav-item" data-view="templates"><span>✦</span> Templates</button>
+      </nav>
+      <div class="nav-label">TOOLS</div>
+      <nav class="main-nav">
+        <button class="nav-item" data-view="themes"><span>◐</span> Theme Workshop</button>
+        <button class="nav-item" data-view="exports"><span>⇧</span> Import / Export</button>
+        <button class="nav-item" data-view="settings"><span>⚙</span> Settings</button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="offline-card"><span class="status-dot"></span><div><b>Local mode active</b><small id="connectionText">Changes save on this device</small></div></div>
+      <div class="sidebar-footer"><span class="avatar">L</span><div><b>Builder workspace</b><small>Personal environment</small></div><button id="helpBtn" class="icon-button" title="Help">?</button></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="mobileMenu" aria-label="Open menu">☰</button>
+        <div class="breadcrumbs"><span>Workspace</span><span class="crumb-sep">/</span><b id="crumbCurrent">App Studio</b></div>
+        <div class="top-actions">
+          <span class="save-indicator"><span class="status-dot"></span><span id="saveStatus">All changes saved</span></span>
+          <button class="button button-ghost" id="undoBtn" title="Undo last change">↶ Undo</button>
+          <button class="button button-ghost" id="redoBtn" title="Redo change">↷ Redo</button>
+          <button class="button button-ghost" id="previewBtn">▷ Preview</button>
+          <button class="button button-primary" id="exportQuickBtn">Export app ↗</button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-studio">
+        <div class="page-heading">
+          <div><div class="eyebrow">VISUAL APP BUILDER</div><h1>App Studio <span class="live-badge">● LIVE</span></h1><p>Compose a mini-app from reusable blocks, then connect its data and behavior.</p></div>
+          <div class="heading-actions"><button class="button button-ghost" id="renameAppBtn">✎ Rename</button><button class="button button-ghost" id="duplicateAppBtn">▣ Duplicate</button></div>
+        </div>
+        <div class="studio-layout">
+          <section class="panel component-panel">
+            <div class="panel-heading"><div><h2>Components</h2><p>Click to add to your app</p></div><span class="tiny-count" id="componentCount">0</span></div>
+            <label class="search-box"><span>⌕</span><input id="componentSearch" placeholder="Search components…" autocomplete="off"></label>
+            <div id="componentCatalog" class="component-catalog"></div>
+            <div class="panel-note"><span>✦</span><div><b>Pro tip</b><p>Use buttons and inputs with workflows to make your app interactive.</p></div></div>
+          </section>
+
+          <section class="canvas-column">
+            <div class="canvas-toolbar">
+              <div><span class="canvas-status"></span><b>Canvas</b><span class="muted" id="canvasAppName">Untitled app</span></div>
+              <div class="toolbar-actions"><button class="seg-button active" data-device="desktop">▱ Desktop</button><button class="seg-button" data-device="mobile">▯ Mobile</button><button class="icon-button" id="clearCanvasBtn" title="Clear canvas">⌫</button></div>
+            </div>
+            <div class="canvas-stage" id="canvasStage">
+              <div class="app-canvas" id="appCanvas">
+                <div class="empty-canvas" id="emptyCanvas"><div class="empty-icon">✦</div><h3>Your app starts here</h3><p>Add components from the left panel, or start from a template.</p><button class="button button-primary" id="browseTemplatesBtn">Browse templates</button></div>
+              </div>
+            </div>
+            <div class="canvas-footer"><span><span class="status-dot"></span> Local preview</span><span id="canvasFooterText">0 components · Autosaved</span></div>
+          </section>
+
+          <section class="panel inspector-panel">
+            <div class="panel-heading"><div><h2>Inspector</h2><p>Configure selected block</p></div><span class="inspector-symbol">⚙</span></div>
+            <div id="inspectorContent" class="inspector-content"><div class="inspector-empty"><div>◈</div><b>No component selected</b><p>Select a component on the canvas to edit its content and settings.</p></div></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-library">
+        <div class="page-heading"><div><div class="eyebrow">YOUR PROJECTS</div><h1>App Library</h1><p>All your mini-apps in one place. Projects stay on this device unless you export them.</p></div><button class="button button-primary" id="newAppBtn">＋ New app</button></div>
+        <div class="toolbar-row"><label class="search-box wide-search"><span>⌕</span><input id="librarySearch" placeholder="Search your apps…"></label><select id="librarySort" class="select-control"><option value="updated">Recently updated</option><option value="name">Name A–Z</option><option value="created">Date created</option></select></div>
+        <div class="app-grid" id="libraryGrid"></div>
+      </section>
+
+      <section class="view" id="view-data">
+        <div class="page-heading"><div><div class="eyebrow">STRUCTURED STORAGE</div><h1>Data Studio</h1><p>Create tables and records that can power your mini-apps.</p></div><button class="button button-primary" id="newTableBtn">＋ New table</button></div>
+        <div class="data-layout"><div class="panel table-list-panel"><div class="panel-heading"><div><h2>Tables</h2><p>Workspace data</p></div></div><div id="tableList" class="table-list"></div></div><div class="panel data-main"><div id="dataWorkspace"><div class="empty-state"><div class="empty-icon">▤</div><h3>Your data lives here</h3><p>Create a table to store records, then connect it to your apps.</p><button class="button button-primary" id="createFirstTableBtn">Create first table</button></div></div></div></div>
+      </section>
+
+      <section class="view" id="view-automations">
+        <div class="page-heading"><div><div class="eyebrow">BEHAVIOR & LOGIC</div><h1>Workflows</h1><p>Connect events, conditions, and actions without writing code.</p></div><button class="button button-primary" id="newWorkflowBtn">＋ New workflow</button></div>
+        <div class="workflow-layout"><div class="panel workflow-list-panel"><div class="panel-heading"><div><h2>Workflows</h2><p>Saved automation rules</p></div></div><div id="workflowList"></div></div><div class="panel workflow-editor" id="workflowEditor"><div class="empty-state"><div class="empty-icon">⌘</div><h3>Make things happen</h3><p>Create a workflow with a trigger and one or more actions.</p><button class="button button-primary" id="createFirstWorkflowBtn">Create workflow</button></div></div></div>
+      </section>
+
+      <section class="view" id="view-templates">
+        <div class="page-heading"><div><div class="eyebrow">START WITH A FOUNDATION</div><h1>Template Gallery</h1><p>Useful starting points. Every template is editable.</p></div></div>
+        <div class="template-filters" id="templateFilters"><button class="filter-chip active" data-filter="All">All templates</button><button class="filter-chip" data-filter="Productivity">Productivity</button><button class="filter-chip" data-filter="Data">Data</button><button class="filter-chip" data-filter="Learning">Learning</button><button class="filter-chip" data-filter="Games">Games</button></div>
+        <div class="template-grid" id="templateGrid"></div>
+      </section>
+
+      <section class="view" id="view-themes">
+        <div class="page-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h1>Theme Workshop</h1><p>Customize the app-builder workspace accent and your selected app's appearance.</p></div><button class="button button-primary" id="saveThemeBtn">Apply theme</button></div>
+        <div class="theme-layout"><div class="panel theme-controls"><div class="panel-heading"><div><h2>Design tokens</h2><p>Changes preview immediately</p></div></div><div class="field"><label for="themeAccent">Accent color</label><div class="color-field"><input type="color" id="themeAccent" value="#9b8cff"><code id="themeAccentText">#9b8cff</code></div></div><div class="field"><label for="themeBg">App background</label><div class="color-field"><input type="color" id="themeBg" value="#10101f"><code id="themeBgText">#10101f</code></div></div><div class="field"><label for="themeRadius">Corner radius</label><input type="range" id="themeRadius" min="4" max="24" value="14"><div class="range-labels"><span>Sharp</span><span id="radiusValue">14px</span><span>Rounded</span></div></div><div class="field"><label>Quick palettes</label><div class="palette-row"><button class="palette-swatch" data-accent="#9b8cff" data-bg="#10101f" style="--swatch:#9b8cff" aria-label="Violet"></button><button class="palette-swatch" data-accent="#65d6bd" data-bg="#0d191c" style="--swatch:#65d6bd" aria-label="Mint"></button><button class="palette-swatch" data-accent="#70a7ff" data-bg="#0c1424" style="--swatch:#70a7ff" aria-label="Blue"></button><button class="palette-swatch" data-accent="#ff9cba" data-bg="#1b101b" style="--swatch:#ff9cba" aria-label="Rose"></button><button class="palette-swatch" data-accent="#ffc66d" data-bg="#1b1710" style="--swatch:#ffc66d" aria-label="Amber"></button></div></div></div><div class="panel theme-preview"><div class="panel-heading"><div><h2>Live preview</h2><p>Sample app surface</p></div><span class="tiny-count">PREVIEW</span></div><div class="theme-demo"><div class="demo-top"><span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span><span>my-mini-app</span></div><div class="demo-content"><div class="demo-eyebrow">YOUR WORKSPACE</div><h2>Make something useful.</h2><p>Reusable components. Your ideas. One engine.</p><div class="demo-metrics"><div><small>Projects</small><b>08</b></div><div><small>Completed</small><b>24</b></div></div><button class="demo-button">Create a project ↗</button></div></div></div></div>
+      </section>
+
+      <section class="view" id="view-exports">
+        <div class="page-heading"><div><div class="eyebrow">PORTABILITY & BACKUPS</div><h1>Import / Export</h1><p>Own your project files. Export editable definitions or standalone web apps.</p></div></div>
+        <div class="export-grid"><div class="panel export-card"><div class="export-icon">⇧</div><h2>Export project</h2><p>Download the selected app as a portable JSON project. Re-import it later to continue editing.</p><button class="button button-primary" id="exportJsonBtn">Export JSON project</button></div><div class="panel export-card"><div class="export-icon">⌘</div><h2>Export standalone app</h2><p>Generate a standalone HTML file with the component layout and supported interactions.</p><button class="button button-primary" id="exportHtmlBtn">Export HTML app</button></div><div class="panel export-card"><div class="export-icon">▧</div><h2>Workspace backup</h2><p>Back up all apps, data tables, and workflows in one portable JSON file.</p><button class="button button-secondary" id="backupBtn">Export workspace backup</button></div><div class="panel export-card"><div class="export-icon">⇩</div><h2>Import project</h2><p>Load a project or workspace backup created by Everything Engine.</p><label class="button button-secondary file-button">Choose JSON file<input type="file" id="importFile" accept=".json,application/json" hidden></label></div></div>
+        <div class="panel portability-note"><h3>What export means</h3><p><b>Editable JSON</b> preserves component definitions and can be re-imported into the builder. <b>Standalone HTML</b> packages the selected app's layout and built-in interactions into one file; integrations requiring a server are not included. Your local data remains on your device unless you export it.</p></div>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="page-heading"><div><div class="eyebrow">PREFERENCES & DATA</div><h1>Settings</h1><p>Manage the local workspace and inspect current capabilities.</p></div></div>
+        <div class="settings-grid"><div class="panel settings-card"><h2>Workspace</h2><div class="settings-row"><div><b>Workspace name</b><small>Shown in the sidebar</small></div><input id="workspaceNameInput" class="text-control" value="My workspace"></div><div class="settings-row"><div><b>Autosave</b><small>Save changes automatically on this device</small></div><span class="pill-status">Enabled</span></div><div class="settings-row"><div><b>Storage</b><small>Local-first, backend-ready structure</small></div><span class="pill-status">Local</span></div><button class="button button-primary" id="saveSettingsBtn">Save settings</button></div><div class="panel settings-card"><h2>Data & privacy</h2><p class="muted">Everything Engine currently stores projects and records locally in your browser. It does not transmit your content to a server.</p><button class="button button-secondary" id="backupFromSettingsBtn">Download workspace backup</button><button class="button button-danger" id="resetWorkspaceBtn">Reset workspace…</button></div><div class="panel settings-card"><h2>Feature status</h2><div class="capability"><span class="status-dot"></span><span>Project persistence</span><b>Available</b></div><div class="capability"><span class="status-dot"></span><span>Offline shell caching</span><b id="swStatus">Checking…</b></div><div class="capability"><span class="status-dot"></span><span>Standalone HTML export</span><b>Available</b></div><div class="capability"><span class="status-dot"></span><span>Cloud sync</span><b>Not configured</b></div><p class="small-note">Backend-ready means the data model is portable and can be connected to a backend later; this ZIP does not include a hosted server or multi-device sync.</p></div></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <dialog id="modal" class="modal"><form method="dialog" id="modalForm"><div class="modal-header"><h2 id="modalTitle">Dialog</h2><button class="icon-button" value="cancel" aria-label="Close">×</button></div><div id="modalBody" class="modal-body"></div><div class="modal-actions" id="modalActions"><button class="button button-secondary" value="cancel">Cancel</button><button class="button button-primary" id="modalConfirm" value="default">Confirm</button></div></form></dialog>
+  <script src="app.js"></script>
+</body>
+</html>
